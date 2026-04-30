@@ -76,7 +76,7 @@ export default () => {
         <button
           onClick={handleInstigate}
           disabled={isSending}
-          className={`relative flex items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 py-4 transition-all duration-300 active:scale-95 ${
+          className={`relative flex cursor-pointer items-center justify-center gap-3 overflow-hidden rounded-2xl px-8 py-4 transition-all duration-300 active:scale-95 ${
             isSending
               ? "cursor-not-allowed bg-slate-800 text-slate-500"
               : "border border-white/10 bg-slate-950 text-white shadow-2xl hover:border-red-500/50"

@@ -88,7 +88,7 @@ export default () => {
             const funnyGuy = period.winners[period.winners.length - 1];
 
             return (
-              <section key={period.year} className="relative">
+              <section key={period.year} className="relative cursor-default">
                 {/* Year Header */}
                 <div className="mb-12 flex items-center gap-8">
                   <div className="flex flex-col">

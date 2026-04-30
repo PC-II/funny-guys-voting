@@ -181,7 +181,7 @@ export default () => {
                 {evidence.length > 0 && (
                   <button
                     onClick={scrollToEvidence}
-                    className="mb-6 flex animate-pulse items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/20 px-3 py-1.5 text-xs font-bold text-blue-400 transition-all hover:bg-blue-500/30 active:scale-95"
+                    className="mb-6 flex animate-pulse cursor-pointer items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/20 px-3 py-1.5 text-xs font-bold text-blue-400 transition-all hover:bg-blue-500/30 active:scale-95"
                   >
                     <span className="text-sm">📂</span>
                     {evidence.length} PIECE{evidence.length > 1 ? "S" : ""} OF
@@ -195,7 +195,7 @@ export default () => {
                       key={name}
                       onClick={() => handleSelect(name)}
                       disabled={isSaving}
-                      className={`group flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ${
+                      className={`group flex w-full cursor-pointer items-center justify-between rounded-2xl border p-4 text-left transition-all duration-200 ${
                         selections[currentCategory.id] === name
                           ? "border-blue-500 bg-blue-600/20 text-white shadow-[0_0_20px_rgba(59,130,246,0.2)]"
                           : "border-white/5 bg-white/5 text-slate-300 hover:border-white/20 hover:bg-white/10"
@@ -238,12 +238,12 @@ export default () => {
                     setCurrentStep((prev) => Math.max(0, prev - 1))
                   }
                   disabled={currentStep === 0}
-                  className="border-white/10 bg-transparent text-white"
+                  className="cursor-pointer border-white/10 bg-transparent text-white"
                 >
                   Back
                 </Button>
                 {currentStep === categories.length - 1 && (
-                  <Button pill href="#/home">
+                  <Button pill href="#/home" className="cursor-pointer">
                     Finish Ballot
                   </Button>
                 )}

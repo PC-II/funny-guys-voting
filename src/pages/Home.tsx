@@ -56,7 +56,7 @@ export default () => {
               className="group relative flex items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-yellow-300 via-yellow-500 to-orange-600 px-10 py-5 shadow-[0_20px_50px_rgba(234,179,8,0.3)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-yellow-500/50 active:scale-95"
             >
               {/* Animated Shimmer Streak */}
-              <div className="absolute inset-0 z-10 w-full translate-x-[-150%] skew-x-[-20deg] animate-[shimmer_3s_infinite] bg-linear-to-r from-transparent via-white/40 to-transparent" />
+              <div className="animate-shimmer absolute inset-0 z-10 w-full translate-x-[-150%] skew-x-[-20deg] bg-linear-to-r from-transparent via-white/40 to-transparent" />
 
               {/* Subtle Inner Glow for depth */}
               <div className="pointer-events-none absolute inset-px rounded-[14px] border border-white/20 bg-linear-to-b from-white/10 to-transparent" />
