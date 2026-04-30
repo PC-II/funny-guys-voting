@@ -45,3 +45,21 @@
 .animate-shimmer {
   animation: shimmer 3s infinite;
 }
+
+@theme {
+  /* Define the shimmer animation */
+  --animate-shimmer: shimmer 3s infinite;
+
+  @keyframes shimmer {
+    from {
+      transform: translateX(-150%) skewX(-20deg);
+    }
+    to {
+      transform: translateX(150%) skewX(-20deg);
+    }
+  }
+
+  /* Custom "Chaos" colors for the instigate button */
+  --color-chaos-red: #ef4444;
+  --color-chaos-pink: #ec4899;
+}

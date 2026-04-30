@@ -5,6 +5,19 @@ import { FileEvidenceForm } from "../components/FileEvidenceForm";
 import VaultFeed from "../components/VaultFeed";
 
 export default () => {
+  // Icon for the button
+  const PlusIcon = () => (
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={3}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
+  );
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { activeYear, isVotingClosed } = useCountdown();
 
@@ -67,16 +80,3 @@ export default () => {
     </main>
   );
 };
-
-// Icon for the button
-const PlusIcon = () => (
-  <svg
-    className="h-5 w-5"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth={3}
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-  </svg>
-);

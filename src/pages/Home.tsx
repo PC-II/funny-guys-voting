@@ -10,6 +10,7 @@ import { ActivityFeed } from "../components/ActivityFeed";
 import { provisionUserForYear } from "../utils/provisionUser";
 import { auth } from "../utils/firebase";
 import { useEffect } from "react";
+import InstigateButton from "../components/InstigateButton";
 
 export default () => {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ export default () => {
           </div>
         )}
 
-        {/* Floating Frosty Hero Card */}
+        {/* Hero Card */}
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl md:p-12">
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div className="flex-1 space-y-2">
@@ -135,14 +136,13 @@ export default () => {
             </Button>
           </div>
 
-          {/* Frosty Progress Bar Section */}
+          {/* Progress Bar Section */}
           <div className="mt-10">
             <div className="mb-2 flex justify-between text-sm font-medium text-slate-300">
               <span>Overall Completion</span>
               <span>{(Number(progressPercent) || 0).toFixed(1)}%</span>
             </div>
 
-            {/* Custom Styled Flowbite Progress */}
             <div className="h-4 w-full overflow-hidden rounded-full border border-white/5 bg-white/10 p-1">
               <div
                 className="h-full rounded-full bg-linear-to-r from-blue-400 via-purple-500 to-pink-500 shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-1000 ease-out"
@@ -155,8 +155,8 @@ export default () => {
         {/* The Wall Of Shame */}
         <WallOfShame />
 
-        {/* "Activity" cards later */}
-        <div className="mt-12 flex justify-center pb-20">
+        {/* Activity Cards */}
+        <div className="mt-12 flex justify-center pb-12">
           <div className="w-full max-w-2xl">
             {!isResultsEra ? (
               <ActivityFeed />
@@ -175,6 +175,9 @@ export default () => {
             )}
           </div>
         </div>
+
+        {/* Instigation Section */}
+        <InstigateButton />
       </div>
     </main>
   );
