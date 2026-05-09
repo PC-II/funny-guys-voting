@@ -169,7 +169,7 @@ export default ({ isSystemLocked, setSystemLocked }: VoiceTransmitterProps) => {
         <h3 className="font-sans text-lg font-bold tracking-tight text-white uppercase">
           Live Voice Transmitter
         </h3>
-        <p className="text-[11px] font-light tracking-wide text-slate-400">
+        <p className="text-[11px] tracking-wide text-slate-400">
           {isSystemLocked && !isRecording
             ? "🔒 Voice pipeline is busy."
             : "Push a dynamic microphone message directly into Discord."}
@@ -195,7 +195,7 @@ export default ({ isSystemLocked, setSystemLocked }: VoiceTransmitterProps) => {
         )}
 
         {isSendingVoice && (
-          <div className="flex items-center gap-2 font-mono text-[10px] tracking-widest text-amber-500 uppercase">
+          <div className="flex items-center gap-2 text-[10px] tracking-widest text-amber-500 uppercase">
             <svg
               className="h-3.5 w-3.5 animate-spin text-amber-500"
               fill="none"

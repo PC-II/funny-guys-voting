@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { auth, storage, db } from "../utils/firebase";
 import {
   ref,
@@ -37,7 +38,7 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
 
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [customName, setCustomName] = useState("");
-  const [customEmojiInput, setCustomEmojiInput] = useState("🔊"); // Defaults to a speaker
+  const [customEmojiInput, setCustomEmojiInput] = useState("🔊");
   const [showRenameModal, setShowRenameModal] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -69,13 +70,9 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
     return () => unsubscribe();
   }, []);
 
-  // Helper: Extract valid emojis from string and limit to a max of 3
   const getCleanEmojis = (input: string): string => {
-    // Unicode regex to isolate native emojis
     const emojiRegex = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu;
     const matches = input.match(emojiRegex) || [];
-
-    // Slice to enforce maximum of 3 emojis
     return matches.slice(0, 3).join("");
   };
 
@@ -102,7 +99,7 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
           .replace(/[_-]/g, " ");
         setPendingFile(file);
         setCustomName(defaultName);
-        setCustomEmojiInput("🔊"); // Reset to default speaker
+        setCustomEmojiInput("🔊");
         setShowRenameModal(true);
       }
     });
@@ -111,7 +108,6 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
   const handleUploadConfirm = async () => {
     if (!pendingFile || !customName.trim() || !currentUserUid) return;
 
-    // Clean up the emoji string. Fall back to "🔊" if they cleared the field or typed gibberish.
     const processedEmojis = getCleanEmojis(customEmojiInput) || "🔊";
 
     setIsUploading(true);
@@ -288,7 +284,7 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
           <h3 className="font-sans text-lg font-bold tracking-tight text-white uppercase">
             Discord Soundboard
           </h3>
-          <p className="text-[11px] font-light tracking-wide text-slate-400">
+          <p className="text-[11px] tracking-wide text-slate-400">
             {isSystemLocked
               ? "🔒 Transmitting sound... Please wait."
               : "Cloud sound bites. Up to 10 seconds max."}
@@ -322,7 +318,7 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
 
       {/* Sound Bite Grid */}
       {sounds.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-white/5 bg-black/20 p-8 text-center text-sm font-light text-slate-500">
+        <div className="rounded-2xl border border-dashed border-white/5 bg-black/20 p-8 text-center text-sm text-slate-500">
           No custom sounds added yet. Add your own soundbite!
         </div>
       ) : (
@@ -353,7 +349,6 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
                   </span>
                 )}
 
-                {/* Displaying up to three emojis cleanly */}
                 <span className="text-xl tracking-tight drop-shadow-sm filter transition-transform duration-300 group-hover:scale-110">
                   {sound.emoji}
                 </span>
@@ -366,90 +361,92 @@ export default ({ isSystemLocked, setSystemLocked }: SoundboardProps) => {
         </div>
       )}
 
-      {/* Modern Frosted Modal with Emoji Input Customization */}
-      {showRenameModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
-          <div className="w-full max-w-sm rounded-3xl border border-white/5 bg-black/95 p-6 shadow-2xl ring-1 ring-white/10">
-            <h4 className="mb-1 text-base font-bold tracking-wider text-white uppercase">
-              Configure Your Soundbite
-            </h4>
-            <p className="mb-4 text-[11px] leading-relaxed font-light text-slate-400">
-              Define the display handle and up to 3 custom identity emojis for
-              your cloud track.
-            </p>
-
-            {/* Title Label Input */}
-            <label className="mb-1.5 block font-mono text-[9px] tracking-widest text-slate-500 uppercase">
-              Soundbite Name
-            </label>
-            <input
-              type="text"
-              value={customName}
-              onChange={(e) => setCustomName(e.target.value)}
-              placeholder="e.g. Crazy Screaming"
-              maxLength={24}
-              className="mb-4 w-full rounded-xl border border-white/5 bg-white/5 px-4 py-2.5 text-xs text-white placeholder-slate-600 transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-            />
-
-            {/* Custom Emoji Input Field */}
-            <div className="mb-5">
-              <div className="mb-1.5 flex items-center justify-between">
-                <label className="font-mono text-[9px] tracking-widest text-slate-500 uppercase">
-                  Custom Emojis
-                </label>
-                <span className="font-mono text-[9px] text-amber-500 uppercase">
-                  Max 3 Emojis
-                </span>
-              </div>
-
-              <div className="relative">
-                <input
-                  type="text"
-                  value={customEmojiInput}
-                  onChange={(e) => setCustomEmojiInput(e.target.value)}
-                  placeholder="Paste or type emojis here..."
-                  className="w-full rounded-xl border border-white/5 bg-white/5 py-2.5 pr-16 pl-4 text-xs text-white placeholder-slate-600 transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
-
-                {/* Visual Realtime Validation/Feedback Badge inside input */}
-                <div className="absolute top-1.5 right-2 flex h-7 items-center justify-center rounded-lg border border-white/5 bg-white/5 px-2.5 font-mono text-[10px] text-slate-400">
-                  {getCleanEmojis(customEmojiInput) ? (
-                    <span className="tracking-tight">
-                      {getCleanEmojis(customEmojiInput)}
-                    </span>
-                  ) : (
-                    <span className="text-red-400">None ❌</span>
-                  )}
-                </div>
-              </div>
-              <p className="mt-1.5 text-[10px] leading-tight font-light text-slate-500">
-                Any regular letters, symbols, or extra emojis you write will be
-                filtered out automatically.
+      {showRenameModal &&
+        createPortal(
+          <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md">
+            <div className="w-full max-w-sm rounded-3xl border border-white/5 bg-black/95 p-6 shadow-2xl ring-1 ring-white/10">
+              <h4 className="mb-1 text-base font-bold tracking-wider text-white uppercase">
+                Configure Your Soundbite
+              </h4>
+              <p className="mb-4 text-[11px] leading-relaxed text-slate-400">
+                Define the display handle and up to 3 custom identity emojis for
+                your cloud track.
               </p>
-            </div>
 
-            {/* Action Controls */}
-            <div className="flex justify-end gap-2.5">
-              <button
-                onClick={() => {
-                  setShowRenameModal(false);
-                  setPendingFile(null);
-                }}
-                className="cursor-pointer rounded-xl bg-white/5 px-4 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase transition-all hover:bg-white/10"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUploadConfirm}
-                disabled={!customName.trim()}
-                className="cursor-pointer rounded-xl bg-amber-500 px-4 py-2 text-[10px] font-bold tracking-wider text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50"
-              >
-                Confirm
-              </button>
+              {/* Title Label Input */}
+              <label className="mb-1.5 block text-[9px] tracking-widest text-slate-500 uppercase">
+                Soundbite Name
+              </label>
+              <input
+                type="text"
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                placeholder="e.g. Crazy Screaming"
+                maxLength={24}
+                className="mb-4 w-full rounded-xl border border-white/5 bg-white/5 px-4 py-2.5 text-xs text-white placeholder-slate-600 transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              />
+
+              {/* Custom Emoji Input Field */}
+              <div className="mb-5">
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="text-[9px] tracking-widest text-slate-500 uppercase">
+                    Custom Emojis
+                  </label>
+                  <span className="font-mono text-[9px] text-amber-500 uppercase">
+                    Max 3 Emojis
+                  </span>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={customEmojiInput}
+                    onChange={(e) => setCustomEmojiInput(e.target.value)}
+                    placeholder="Paste or type emojis here..."
+                    className="w-full rounded-xl border border-white/5 bg-white/5 py-2.5 pr-16 pl-4 text-xs text-white placeholder-slate-600 transition-all focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                  />
+
+                  {/* Visual Realtime Validation/Feedback Badge inside input */}
+                  <div className="absolute top-1.5 right-2 flex h-7 items-center justify-center rounded-lg border border-white/5 bg-white/5 px-2.5 font-mono text-[10px] text-slate-400">
+                    {getCleanEmojis(customEmojiInput) ? (
+                      <span className="tracking-tight">
+                        {getCleanEmojis(customEmojiInput)}
+                      </span>
+                    ) : (
+                      <span className="text-red-400">None ❌</span>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-1.5 text-[10px] leading-tight text-slate-500">
+                  Any regular letters, symbols, or extra emojis you write will
+                  be filtered out automatically.
+                </p>
+              </div>
+
+              {/* Action Controls */}
+              <div className="flex justify-end gap-2.5">
+                <button
+                  onClick={() => {
+                    setShowRenameModal(false);
+                    setPendingFile(null);
+                    if (fileInputRef.current) fileInputRef.current.value = "";
+                  }}
+                  className="cursor-pointer rounded-xl bg-white/5 px-4 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase transition-all hover:bg-white/10"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleUploadConfirm}
+                  disabled={!customName.trim()}
+                  className="cursor-pointer rounded-xl bg-amber-500 px-4 py-2 text-[10px] font-bold tracking-wider text-black uppercase transition-all hover:bg-amber-400 disabled:opacity-50"
+                >
+                  Confirm
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };
