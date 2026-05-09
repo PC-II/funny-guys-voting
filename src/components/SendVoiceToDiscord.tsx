@@ -131,18 +131,21 @@ export default ({ isSystemLocked, setSystemLocked }: VoiceTransmitterProps) => {
         }),
       });
 
+      await deleteObject(fileRef).catch((e) => console.warn(e));
+
       if (!response.ok) {
         const errData = await response.json();
         alert(errData.error || "Failed to transmit audio.");
+
         setSystemLocked(false);
         setIsSendingVoice(false);
         return;
       }
 
-      // Cleanup transient storage file after 15s
-      setTimeout(async () => {
-        await deleteObject(fileRef).catch((e) => console.warn(e));
-      }, 15000);
+      // // Cleanup transient storage file after 15s
+      // setTimeout(async () => {
+      //   await deleteObject(fileRef).catch((e) => console.warn(e));
+      // }, 15000);
 
       // Lock UI for the dynamic duration of the recording + 1.5s buffer
       const lockDurationMs = calculatedDuration * 1000 + 1500;
