@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 interface EvidenceItem {
   authorName: string;
@@ -61,7 +62,7 @@ export const EvidenceBoard = ({
                   )}
 
                   {item.fileType === "image" && (
-                    /* 2. Wrap image in a zoom-in cursor div and add onClick */
+                    /* Wrap image in a zoom-in cursor div and add onClick */
                     <div
                       className="group/img relative cursor-zoom-in overflow-hidden rounded-lg"
                       onClick={() => setSelectedImage(item.fileUrl || null)}
@@ -107,29 +108,33 @@ export const EvidenceBoard = ({
       </AnimatePresence>
 
       {/* 3. LIGHTBOX OVERLAY */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setSelectedImage(null)}
-            className="fixed inset-0 z-200 flex h-full cursor-zoom-out items-center justify-center bg-slate-950/90 p-4 backdrop-blur-xl"
-          >
-            <motion.img
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              src={selectedImage}
-              className="max-h-[90vh] max-w-full rounded-2xl border border-white/10 shadow-2xl"
-              alt="Evidence Fullscreen"
-            />
-            <div className="absolute top-6 right-6 font-mono text-xs tracking-widest text-white/50 uppercase">
-              Click anywhere to close
-            </div>
-          </motion.div>
+      {typeof window !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {selectedImage && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedImage(null)}
+                className="fixed inset-0 z-9999 flex h-screen w-screen cursor-zoom-out items-center justify-center bg-slate-950/95 p-4 backdrop-blur-xl"
+              >
+                <motion.img
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  src={selectedImage}
+                  className="max-h-[90vh] max-w-full rounded-2xl border border-white/10 shadow-2xl"
+                  alt="Evidence Fullscreen"
+                />
+                <div className="absolute top-6 right-6 font-mono text-xs tracking-widest text-white/50 uppercase">
+                  Click anywhere to close
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </>
   );
 };
