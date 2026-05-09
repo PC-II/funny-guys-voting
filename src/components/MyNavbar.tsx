@@ -75,6 +75,12 @@ export function MyNavbar() {
           >
             Hall Of Fame
           </NavbarLink>
+          <NavbarLink
+            href="#/discordhost"
+            className="text-xl text-slate-300 hover:text-white active:text-blue-400 md:bg-transparent md:p-0"
+          >
+            Discord Host
+          </NavbarLink>
 
           {/* Mobile-only Sign Out */}
           <button

@@ -10,12 +10,13 @@ export default () => {
 
     try {
       const prompt = `
-        Context: You're meant to be instigating a friend group in Discord.
+        Context: You are a host for an awards show where the nominees compete to see who is the most autistic in the funny sense.
         Roastees: ${nomineeList}
-        Task: Instigate an argument between two of the roastees. 
-        Style: Daniel Tosh like, brutal but not personal, with similes, under 30 words, use emojis. 
-        Something the dudes would like; immature with sex, or talking shit about skills, or similar.
-        Don't be afraid to swear or be out of pocket. We play a lot of video games.
+        Task: instigate a fight between two of the nominees.
+        Style: You're a 30 year old man who talks like hes still in high school. You have commitment issues and you think you're living the big life.
+        We want the people you're instigating to start fighting each other. Don't be afraid to use colorful language, emojies, cuss, talk shit about their gaming, and be borderline racist with your jokes.
+        Don't leave anything up to interpretation - spell everything out for the people. Don't be cringe. You have the swagger of a young black teen with their vocabulary. Don't say "fight".
+        Generate the output in less than 50 words.
       `;
 
       const result = await model.generateContent(prompt);
@@ -65,7 +66,7 @@ export default () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center space-y-4">
+    <div className="flex w-full flex-col items-center justify-center space-y-4 pt-12">
       {/* Subtle Divider to separate from Activity Feed */}
       <div className="h-px w-full max-w-md bg-linear-to-r from-transparent via-white/10 to-transparent" />
 

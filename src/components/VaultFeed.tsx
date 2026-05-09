@@ -19,20 +19,27 @@ export default ({ activeYear }: { activeYear: number }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(
-      collection(db, "polls", String(activeYear), "evidence"),
-      orderBy("timestamp", "desc"),
-    );
-    return onSnapshot(q, (snap) => {
-      setEvidence(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-    });
+    try {
+      const q = query(
+        collection(db, "polls", String(activeYear), "evidence"),
+        orderBy("timestamp", "desc"),
+      );
+      return onSnapshot(q, (snap) => {
+        setEvidence(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+      });
+    } catch (err) {
+      console.error("could not load evidence:", err);
+    } finally {
+      setLoading(false);
+    }
   }, [activeYear]);
 
   const handleDelete = async (item: any) => {
     if (!item) return;
-    setIsDeleting(true); // Start loading
+    setIsDeleting(true);
 
     try {
       // 1. Delete from Firestore
@@ -51,9 +58,18 @@ export default ({ activeYear }: { activeYear: number }) => {
     } catch (error) {
       alert("Failed to retract evidence.");
     } finally {
-      setIsDeleting(false); // Stop loading
+      setIsDeleting(false);
     }
   };
+
+  if (loading)
+    return (
+      <main className="relative flex min-h-screen w-full items-center justify-center bg-slate-900">
+        <div className="animate-pulse font-mono text-blue-400">
+          Loading the Chaos...
+        </div>
+      </main>
+    );
 
   return (
     <div className="space-y-12">

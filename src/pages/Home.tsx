@@ -10,7 +10,6 @@ import { ActivityFeed } from "../components/ActivityFeed";
 import { provisionUserForYear } from "../utils/provisionUser";
 import { auth } from "../utils/firebase";
 import { useEffect } from "react";
-import InstigateButton from "../components/InstigateButton";
 
 export default () => {
   const navigate = useNavigate();
@@ -175,9 +174,6 @@ export default () => {
             )}
           </div>
         </div>
-
-        {/* Instigation Section */}
-        <InstigateButton />
       </div>
     </main>
   );

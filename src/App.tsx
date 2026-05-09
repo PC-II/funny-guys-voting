@@ -11,6 +11,7 @@ import Results from "./pages/Results";
 import HallOfFame from "./pages/HallOfFame";
 import Vault from "./pages/Vault";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import DiscordHost from "./pages/DiscordHost";
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
           <Route path="/results" element={<Results />} />
           <Route path="/vault" element={<Vault />} />
           <Route path="/halloffame" element={<HallOfFame />} />
+          <Route path="/discordhost" element={<DiscordHost />} />
         </Route>
 
         {/* Redirect logic */}
